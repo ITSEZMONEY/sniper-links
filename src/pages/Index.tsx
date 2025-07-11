@@ -157,36 +157,36 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen hero-gradient">
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
-        <div className="text-white font-bold text-xl">SniperLink</div>
+      <nav className="container mx-auto px-6 py-6 flex justify-between items-center">
+        <div className="text-foreground font-bold text-xl">SniperLink</div>
         <div className="flex gap-4">
-          <Button variant="ghost" className="text-white hover:text-white hover:bg-white/10">
+          <Button variant="ghost">
             Docs
           </Button>
-          <Button variant="hero" size="sm">
+          <Button variant="default" size="sm">
             Sign In
           </Button>
         </div>
       </nav>
 
-      <div className="container-wide">
+      <div className="container mx-auto px-6 py-16">
         {/* Hero Section */}
-        <section className="text-center mb-20 pt-8">
-          <Badge className="mb-6 bg-white/20 text-white border-white/30 hover:bg-white/30">
+        <section className="text-center mb-20">
+          <Badge className="mb-6 bg-primary/10 text-primary border-primary/20">
             ⚡ Used by 1,200+ SaaS companies
           </Badge>
-          <h1 className="font-bold mb-6 text-white leading-tight">
-            Up to <span className="text-yellow-300">61%</span> of your signups<br />
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground leading-tight">
+            Up to <span className="text-primary">61%</span> of your signups<br />
             never confirm their email
           </h1>
-          <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
             SniperLink recovers lost signups instantly with 1-click inbox deep links — 
             even if your confirmation email landed in spam
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button variant="hero" size="xl" className="text-lg hover-lift">
+            <Button variant="default" size="xl" className="text-lg hover-lift">
               <Play className="w-5 h-5 mr-2" />
               Try Live Demo
             </Button>
@@ -197,65 +197,63 @@ const Index = () => {
           </div>
           
           {/* Social Proof */}
-          <div className="text-white/60 text-sm mb-8">
+          <div className="text-muted-foreground text-sm mb-8">
             Trusted by teams at companies you know
           </div>
           <div className="flex justify-center items-center gap-8 opacity-60 mb-12">
             {["YC Company", "TechCorp", "SaaS Inc", "StartupXYZ", "GrowthCo"].map((company, i) => (
-              <div key={i} className="text-white font-semibold">{company}</div>
+              <div key={i} className="text-muted-foreground font-semibold">{company}</div>
             ))}
           </div>
         </section>
 
         {/* Live Demo Section */}
-        <Card className="glass-enhanced max-w-2xl mx-auto mb-20 hover-lift">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              See SniperLink in Action
-            </h2>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              Enter your email to see how SniperLink finds your inbox — works with Gmail, Outlook, Yahoo, and more
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-4">
-              <div className="relative w-full sm:w-80">
-                <Input
-                  type="email"
-                  placeholder="you@gmail.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 h-12 text-base"
-                  onKeyPress={(e) => e.key === "Enter" && handleSniperTry()}
-                />
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                  ✉️
-                </div>
+        <div className="glass-enhanced max-w-2xl mx-auto mb-20 hover-lift p-8">
+          <h2 className="text-3xl font-bold mb-2 text-center text-foreground">
+            See SniperLink in Action
+          </h2>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto text-center">
+            Enter your email to see how SniperLink finds your inbox — works with Gmail, Outlook, Yahoo, and more
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-4">
+            <div className="relative w-full sm:w-80">
+              <Input
+                type="email"
+                placeholder="you@gmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-10 h-12 text-base"
+                onKeyPress={(e) => e.key === "Enter" && handleSniperTry()}
+              />
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                ✉️
               </div>
-              <Button 
-                onClick={handleSniperTry}
-                variant="cta"
-                disabled={isLoading}
-                size="lg"
-                className="w-full sm:w-auto h-12 px-8 font-semibold tracking-wide hover-lift"
-              >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="spinner"></div>
-                    Opening...
-                  </div>
-                ) : (
-                  <>Open My Inbox 🚀</>
-                )}
-              </Button>
             </div>
-            {email && email.includes('@') && (
-              <div className="text-sm text-muted-foreground">
-                Will open: <span className="font-mono bg-muted px-2 py-1 rounded text-xs">
-                  {email.split('@')[1].toLowerCase()}
-                </span>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            <Button 
+              onClick={handleSniperTry}
+              variant="default"
+              disabled={isLoading}
+              size="lg"
+              className="w-full sm:w-auto h-12 px-8 font-semibold tracking-wide hover-lift"
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="spinner"></div>
+                  Opening...
+                </div>
+              ) : (
+                <>Open My Inbox 🚀</>
+              )}
+            </Button>
+          </div>
+          {email && email.includes('@') && (
+            <div className="text-sm text-muted-foreground text-center">
+              Will open: <span className="font-mono bg-muted px-2 py-1 rounded text-xs">
+                {email.split('@')[1].toLowerCase()}
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* Problem Section */}
         <section className="mb-20">
@@ -533,14 +531,14 @@ const Index = () => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/20 mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-between items-center text-white/60">
+      <footer className="border-t mt-20">
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex justify-between items-center text-muted-foreground">
             <div>© 2024 SniperLink. All rights reserved.</div>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
-              <a href="#" className="hover:text-white transition-colors">Contact</a>
+              <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+              <a href="#" className="hover:text-foreground transition-colors">Terms</a>
+              <a href="#" className="hover:text-foreground transition-colors">Contact</a>
             </div>
           </div>
         </div>
