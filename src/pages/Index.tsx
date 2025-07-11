@@ -66,30 +66,53 @@ const Index = () => {
         </section>
 
         {/* Live Demo Section */}
-        <Card className="glass-card max-w-2xl mx-auto mb-16">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">Try it yourself</h2>
-            <p className="text-muted-foreground mb-6">
-              Enter your email to see how SniperLink finds your inbox
+        <Card className="glass-card max-w-2xl mx-auto mb-16 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 pointer-events-none"></div>
+          <CardContent className="p-8 text-center relative z-10">
+            <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Try it yourself
+            </h2>
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              Enter your email to see how SniperLink finds your inbox — works with Gmail, Outlook, Yahoo, and more
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-              <Input
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full sm:w-80"
-                onKeyPress={(e) => e.key === "Enter" && handleSniperTry()}
-              />
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-4">
+              <div className="relative w-full sm:w-80">
+                <Input
+                  type="email"
+                  placeholder="you@gmail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-10 h-12 text-base transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  onKeyPress={(e) => e.key === "Enter" && handleSniperTry()}
+                />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                  ✉️
+                </div>
+              </div>
               <Button 
                 onClick={handleSniperTry}
                 variant="cta"
                 disabled={isLoading}
-                className="w-full sm:w-auto"
+                size="lg"
+                className="w-full sm:w-auto h-12 px-8 font-semibold tracking-wide"
               >
-                {isLoading ? "Opening..." : "Open Inbox"}
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Opening...
+                  </div>
+                ) : (
+                  <>Open Inbox 🚀</>
+                )}
               </Button>
             </div>
+            {email && email.includes('@') && (
+              <div className="text-sm text-muted-foreground">
+                Will open: <span className="font-mono bg-muted px-2 py-1 rounded text-xs">
+                  {email.split('@')[1].toLowerCase()}
+                </span>
+              </div>
+            )}
           </CardContent>
         </Card>
 
