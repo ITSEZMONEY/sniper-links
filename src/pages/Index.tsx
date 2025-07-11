@@ -157,7 +157,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary via-primary/90 to-primary/70">
+    <div className="min-h-screen hero-gradient">
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="text-white font-bold text-xl">SniperLink</div>
@@ -171,13 +171,13 @@ const Index = () => {
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 pb-16">
+      <div className="container-wide">
         {/* Hero Section */}
         <section className="text-center mb-20 pt-8">
           <Badge className="mb-6 bg-white/20 text-white border-white/30 hover:bg-white/30">
             ⚡ Used by 1,200+ SaaS companies
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight">
+          <h1 className="font-bold mb-6 text-white leading-tight">
             Up to <span className="text-yellow-300">61%</span> of your signups<br />
             never confirm their email
           </h1>
@@ -186,11 +186,11 @@ const Index = () => {
             even if your confirmation email landed in spam
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button variant="hero" size="xl" className="text-lg">
+            <Button variant="hero" size="xl" className="text-lg hover-lift">
               <Play className="w-5 h-5 mr-2" />
               Try Live Demo
             </Button>
-            <Button variant="secondary" size="xl" className="text-lg">
+            <Button variant="secondary" size="xl" className="text-lg hover-lift">
               <ArrowRight className="w-5 h-5 mr-2" />
               Add to Site in 60 Seconds
             </Button>
@@ -208,9 +208,8 @@ const Index = () => {
         </section>
 
         {/* Live Demo Section */}
-        <Card className="glass-card max-w-2xl mx-auto mb-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 pointer-events-none"></div>
-          <CardContent className="p-8 text-center relative z-10">
+        <Card className="glass-enhanced max-w-2xl mx-auto mb-20 hover-lift">
+          <CardContent className="p-8 text-center">
             <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               See SniperLink in Action
             </h2>
@@ -224,7 +223,7 @@ const Index = () => {
                   placeholder="you@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 h-12 text-base transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  className="w-full pl-10 h-12 text-base"
                   onKeyPress={(e) => e.key === "Enter" && handleSniperTry()}
                 />
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
@@ -236,11 +235,11 @@ const Index = () => {
                 variant="cta"
                 disabled={isLoading}
                 size="lg"
-                className="w-full sm:w-auto h-12 px-8 font-semibold tracking-wide"
+                className="w-full sm:w-auto h-12 px-8 font-semibold tracking-wide hover-lift"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="spinner"></div>
                     Opening...
                   </div>
                 ) : (
@@ -260,7 +259,7 @@ const Index = () => {
 
         {/* Problem Section */}
         <section className="mb-20">
-          <Card className="glass-card max-w-4xl mx-auto">
+          <Card className="glass-enhanced max-w-4xl mx-auto hover-lift">
             <CardContent className="p-12 text-center">
               <h2 className="text-4xl font-bold mb-8 text-red-600 dark:text-red-400">
                 The Hidden Revenue Leak in Every SaaS
@@ -292,7 +291,7 @@ const Index = () => {
 
         {/* Solution Section */}
         <section className="mb-20">
-          <Card className="glass-card max-w-6xl mx-auto">
+          <Card className="glass-enhanced max-w-6xl mx-auto hover-lift">
             <CardContent className="p-12">
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-bold mb-4">
@@ -337,12 +336,12 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-                <div className="bg-muted/20 rounded-lg p-6 text-center">
+                <div className="glass-enhanced p-6 text-center">
                   <div className="text-sm text-muted-foreground mb-2">Live Preview</div>
                   <div className="bg-background rounded border p-4 mb-4">
                     <h4 className="font-semibold mb-2">Check your email</h4>
                     <p className="text-sm text-muted-foreground mb-3">We sent a confirmation link to your@gmail.com</p>
-                    <Button variant="outline" className="w-full mb-2">
+                    <Button variant="outline" className="w-full mb-2 hover-lift">
                       <Mail className="w-4 h-4 mr-2" />
                       Open Gmail Inbox
                     </Button>
@@ -370,7 +369,7 @@ const Index = () => {
           
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             {features.map((feature, index) => (
-              <Card key={index} className="glass-card">
+              <Card key={index} className="glass-card hover-lift">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-2 rounded-lg">
@@ -400,7 +399,7 @@ const Index = () => {
           
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="glass-card">
+              <Card key={index} className="glass-card hover-lift">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-2 mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -434,7 +433,7 @@ const Index = () => {
           
           <div className="grid md:grid-cols-3 gap-6">
             {pricingPlans.map((plan, index) => (
-              <Card key={index} className={`glass-card relative ${plan.highlighted ? 'ring-2 ring-primary' : ''}`}>
+              <Card key={index} className={`glass-card hover-lift relative ${plan.highlighted ? 'ring-2 ring-primary' : ''}`}>
                 {plan.highlighted && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
@@ -461,7 +460,7 @@ const Index = () => {
                   
                   <Button 
                     variant={plan.highlighted ? "cta" : "outline"} 
-                    className="w-full"
+                    className="w-full hover-lift"
                     size="lg"
                   >
                     {plan.cta}
@@ -480,7 +479,7 @@ const Index = () => {
             </h2>
           </div>
           
-          <Card className="glass-card max-w-4xl mx-auto">
+          <Card className="glass-enhanced max-w-4xl mx-auto hover-lift">
             <CardContent className="p-8">
               <div className="space-y-6">
                 {faqs.map((faq, index) => (
@@ -496,7 +495,7 @@ const Index = () => {
 
         {/* Final CTA Section */}
         <section className="text-center">
-          <Card className="glass-card max-w-4xl mx-auto">
+          <Card className="glass-enhanced max-w-4xl mx-auto hover-lift">
             <CardContent className="p-12">
               <h2 className="text-4xl font-bold mb-4">
                 Stop Losing Signups Today
@@ -505,11 +504,11 @@ const Index = () => {
                 Join 1,200+ companies recovering lost revenue with SniperLink
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <Button variant="cta" size="xl" className="text-lg">
+                <Button variant="cta" size="xl" className="text-lg hover-lift">
                   <Zap className="w-5 h-5 mr-2" />
                   Start Free - No Credit Card
                 </Button>
-                <Button variant="outline" size="xl" className="text-lg">
+                <Button variant="outline" size="xl" className="text-lg hover-lift">
                   <Clock className="w-5 h-5 mr-2" />
                   Book 15-min Demo
                 </Button>
