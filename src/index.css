@@ -4,50 +4,67 @@
 
 @layer base {
   :root {
-    /* Light mode colors - High contrast for readability */
-    --background: 0 0 100;
-    --foreground: 0 0 3;
-    --card: 0 0 100;
-    --card-foreground: 0 0 3;
+    /* Light theme - Based on Superhuman principles */
+    --background: 0 0 100;        /* Pure white background */
+    --foreground: 0 0 9;          /* Deep gray text, not pure black */
+    --card: 0 0 98;               /* Slightly off-white for cards */
+    --card-foreground: 0 0 9;
     --popover: 0 0 100;
-    --popover-foreground: 0 0 3;
-    --primary: 221 83 53;
-    --primary-foreground: 0 0 98;
-    --secondary: 210 40 95;
+    --popover-foreground: 0 0 9;
+    --primary: 263 85 70;         /* Rich purple */
+    --primary-foreground: 0 0 100;
+    --secondary: 220 14 96;       /* Light gray */
     --secondary-foreground: 0 0 9;
-    --muted: 210 40 95;
-    --muted-foreground: 215 15 65;
-    --accent: 221 83 53;
-    --accent-foreground: 0 0 98;
+    --muted: 220 14 96;
+    --muted-foreground: 220 9 46; /* Medium gray for secondary text */
+    --accent: 263 85 70;
+    --accent-foreground: 0 0 100;
     --destructive: 0 84 60;
     --destructive-foreground: 0 0 98;
     --border: 220 13 91;
     --input: 220 13 91;
-    --ring: 221 83 53;
+    --ring: 263 85 70;
     --radius: 0.75rem;
+    
+    /* Surface elevations for light mode */
+    --surface-0: 0 0 100;    /* Background */
+    --surface-1: 0 0 98;     /* Cards */
+    --surface-2: 0 0 96;     /* Elevated elements */
+    --surface-3: 0 0 94;     /* Modals */
   }
 
   .dark {
-    /* Dark mode colors - High contrast for readability */
-    --background: 0 0 3;
-    --foreground: 0 0 98;
-    --card: 0 0 7;
-    --card-foreground: 0 0 98;
-    --popover: 0 0 7;
-    --popover-foreground: 0 0 98;
-    --primary: 221 83 53;
-    --primary-foreground: 0 0 98;
-    --secondary: 217 32 17;
-    --secondary-foreground: 0 0 98;
-    --muted: 217 32 17;
-    --muted-foreground: 215 20 75;
-    --accent: 221 83 53;
-    --accent-foreground: 0 0 98;
-    --destructive: 0 63 31;
-    --destructive-foreground: 0 0 98;
-    --border: 217 32 17;
-    --input: 217 32 17;
-    --ring: 221 83 53;
+    /* Dark theme - Following Superhuman's 5 principles */
+    
+    /* Principle 1: Darken distant surfaces - 5 shades of gray */
+    --background: 0 0 8;          /* Dark gray, not pure black */
+    --foreground: 0 0 90;         /* Off-white text, not pure white (90% opacity) */
+    --card: 0 0 12;               /* Lighter than background for elevation */
+    --card-foreground: 0 0 90;
+    --popover: 0 0 16;            /* Even lighter for modals */
+    --popover-foreground: 0 0 90;
+    
+    /* Principle 5: Deepen colors - preserve hue, reduce lightness, increase saturation */
+    --primary: 263 95 55;         /* Deeper purple - more saturated, less light */
+    --primary-foreground: 0 0 90;
+    
+    --secondary: 0 0 16;          /* Dark gray surface */
+    --secondary-foreground: 0 0 90;
+    --muted: 0 0 16;
+    --muted-foreground: 0 0 65;   /* Principle 2: Adjust perceptual contrast (65% vs 60% in light) */
+    --accent: 263 95 55;
+    --accent-foreground: 0 0 90;
+    --destructive: 0 85 45;       /* Deeper red */
+    --destructive-foreground: 0 0 90;
+    --border: 0 0 16;
+    --input: 0 0 16;
+    --ring: 263 95 55;
+    
+    /* Surface elevations - Principle 1: Nearer surfaces are lighter */
+    --surface-0: 0 0 8;      /* Background - darkest */
+    --surface-1: 0 0 12;     /* Cards */
+    --surface-2: 0 0 16;     /* Elevated elements */
+    --surface-3: 0 0 20;     /* Modals - lightest */
   }
 }
 
@@ -56,26 +73,104 @@
     @apply border-border;
   }
   
+  html {
+    /* Enable smooth theme transitions */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
   body {
     @apply bg-background text-foreground;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
+    /* Smooth theme transitions */
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
+  
+  /* Typography - Superhuman style hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+  
+  h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+  h2 { font-size: clamp(2rem, 4vw, 3rem); }
+  h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
 }
 
 @layer components {
+  /* Surface components following elevation principles */
+  .surface-0 {
+    @apply bg-[hsl(var(--surface-0))];
+  }
+  
+  .surface-1 {
+    @apply bg-[hsl(var(--surface-1))];
+    /* Subtle shadow for depth - Principle 4.3 */
+    box-shadow: 0 1px 3px 0 hsl(0 0 0 / 0.1), 0 1px 2px -1px hsl(0 0 0 / 0.1);
+  }
+  
+  .surface-2 {
+    @apply bg-[hsl(var(--surface-2))];
+    box-shadow: 0 4px 6px -1px hsl(0 0 0 / 0.1), 0 2px 4px -2px hsl(0 0 0 / 0.1);
+  }
+  
+  .surface-3 {
+    @apply bg-[hsl(var(--surface-3))];
+    box-shadow: 0 10px 15px -3px hsl(0 0 0 / 0.1), 0 4px 6px -4px hsl(0 0 0 / 0.1);
+  }
+  
+  /* Button styles following deepened color principle */
   .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium transition-colors;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium transition-all duration-200;
+    /* Subtle glow effect for dark mode */
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.2);
+  }
+  
+  .btn-primary:hover {
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.3), 0 4px 12px hsl(var(--primary) / 0.15);
+    transform: translateY(-1px);
   }
   
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-lg font-medium transition-colors;
+    @apply surface-1 text-foreground hover:surface-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 border border-border;
   }
   
-  .card-base {
-    @apply bg-card text-card-foreground border border-border rounded-lg p-6;
+  .btn-secondary:hover {
+    transform: translateY(-1px);
   }
   
-  .input-base {
-    @apply bg-background text-foreground border border-input rounded-md px-3 py-2 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring;
+  /* Card component with proper elevation */
+  .card-elevated {
+    @apply surface-1 text-foreground border border-border rounded-lg p-6 transition-all duration-200;
+  }
+  
+  .card-elevated:hover {
+    @apply surface-2;
+    transform: translateY(-2px);
+  }
+  
+  /* Input styling with proper contrast */
+  .input-styled {
+    @apply surface-1 text-foreground border border-border rounded-md px-3 py-2 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200;
+  }
+  
+  /* Theme toggle button */
+  .theme-toggle {
+    @apply surface-1 hover:surface-2 p-2 rounded-lg border border-border transition-all duration-200;
+  }
+  
+  /* Glassmorphism effect for hero sections - Principle 3: Reduce large bright blocks */
+  .glass-subtle {
+    background: linear-gradient(135deg, 
+      hsl(var(--primary) / 0.03) 0%, 
+      hsl(var(--primary) / 0.01) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border));
+  }
+  
+  /* Success state styling */
+  .success-glow {
+    @apply bg-green-500/10 border-green-500/20 text-green-700 dark:text-green-400;
+    box-shadow: 0 0 20px hsl(142 76 36 / 0.1);
   }
 }

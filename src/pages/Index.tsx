@@ -1,13 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Mail, Zap, Target, Shield, BarChart3, Clock, Users, Star, ArrowRight, Play } from "lucide-react";
+import { Check, Mail, Zap, Target, Shield, Star, ArrowRight, Play, Moon, Sun } from "lucide-react";
+
+const ThemeToggle = () => {
+  const [theme, setTheme] = useState('light');
+  
+  useEffect(() => {
+    // Check for saved theme or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const initialTheme = savedTheme || systemTheme;
+    
+    setTheme(initialTheme);
+    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+  }, []);
+  
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+  };
+  
+  return (
+    <button
+      onClick={toggleTheme}
+      className="theme-toggle"
+      aria-label="Toggle theme"
+    >
+      {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+    </button>
+  );
+};
 
 const Index = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const getSniperLink = (email: string, sender = "@yourdomain.com") => {
     const domain = email.split("@")[1].toLowerCase();
@@ -29,7 +61,6 @@ const Index = () => {
 
   const handleSniperTry = () => {
     if (!email.includes("@")) {
-      alert("Enter a valid email");
       return;
     }
     
@@ -39,21 +70,25 @@ const Index = () => {
     setTimeout(() => {
       setIsLoading(false);
       if (!link) {
-        alert("Sorry, we don't support that provider yet.");
         return;
       }
+      // Copy to clipboard and show success
+      navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
       window.open(link, "_blank");
-    }, 500);
+    }, 800);
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen surface-0 transition-all duration-300">
       {/* Navigation */}
-      <nav className="border-b border-border">
+      <nav className="border-b border-border surface-0">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="text-foreground font-bold text-xl">SniperLink</div>
-          <div className="flex gap-4">
-            <Button variant="ghost" className="text-foreground">
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <Button variant="ghost" className="text-foreground hover:surface-1">
               Docs
             </Button>
             <Button className="btn-primary">
@@ -63,68 +98,90 @@ const Index = () => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-16 space-y-20">
-        {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-6 py-16 space-y-32">
+        {/* Hero Section with subtle glassmorphism */}
         <section className="text-center space-y-8">
-          <Badge className="bg-primary/10 text-primary border-primary/20">
-            ⚡ Used by 1,200+ SaaS companies
-          </Badge>
-          
-          <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight">
-              Up to <span className="text-primary">61%</span> of your signups<br />
-              never confirm their email
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto">
-              SniperLink recovers lost signups instantly with 1-click inbox deep links — 
-              even if your confirmation email landed in spam
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="btn-primary text-lg px-8 py-4">
-              <Play className="w-5 h-5 mr-2" />
-              Try Live Demo
-            </Button>
-            <Button className="btn-secondary text-lg px-8 py-4">
-              <ArrowRight className="w-5 h-5 mr-2" />
-              Add to Site in 60 Seconds
-            </Button>
+          <div className="glass-subtle rounded-2xl p-12 max-w-5xl mx-auto">
+            <Badge className="mb-8 bg-primary/10 text-primary border-primary/20 px-4 py-2">
+              ⚡ Used by 1,200+ SaaS companies
+            </Badge>
+            
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight">
+                Up to <span className="text-primary">61%</span> of your signups<br />
+                never confirm their email
+              </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                SniperLink recovers lost signups instantly with 1-click inbox deep links — 
+                even if your confirmation email landed in spam
+              </p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+              <Button className="btn-primary text-lg px-8 py-4">
+                <Play className="w-5 h-5 mr-2" />
+                Try Live Demo
+              </Button>
+              <Button className="btn-secondary text-lg px-8 py-4">
+                <ArrowRight className="w-5 h-5 mr-2" />
+                Add to Site in 60 Seconds
+              </Button>
+            </div>
           </div>
         </section>
 
         {/* Demo Section */}
         <section className="max-w-2xl mx-auto">
-          <Card className="card-base">
+          <Card className="card-elevated">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl font-bold text-foreground">
                 See SniperLink in Action
               </CardTitle>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-lg">
                 Enter your email to see how SniperLink finds your inbox
               </p>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="flex flex-col sm:flex-row gap-4">
-                <Input
-                  type="email"
-                  placeholder="you@gmail.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input-base flex-1"
-                  onKeyPress={(e) => e.key === "Enter" && handleSniperTry()}
-                />
+                <div className="relative flex-1">
+                  <Input
+                    type="email"
+                    placeholder="you@gmail.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="input-styled text-lg py-3"
+                    onKeyPress={(e) => e.key === "Enter" && handleSniperTry()}
+                  />
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                </div>
                 <Button 
                   onClick={handleSniperTry}
                   disabled={isLoading}
-                  className="btn-primary"
+                  className="btn-primary text-lg px-8 py-3 whitespace-nowrap"
                 >
-                  {isLoading ? "Opening..." : "Open My Inbox 🚀"}
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-foreground border-t-transparent"></div>
+                      Opening...
+                    </div>
+                  ) : (
+                    <>Open My Inbox 🚀</>
+                  )}
                 </Button>
               </div>
+              
+              {copied && (
+                <div className="success-glow rounded-lg p-4 text-center font-medium">
+                  <Check className="w-5 h-5 inline mr-2" />
+                  Inbox link copied! Now paste it into your 'Check your inbox' screen.
+                </div>
+              )}
+              
               {email && email.includes('@') && (
                 <div className="text-sm text-muted-foreground text-center">
-                  Will open: <span className="font-mono bg-muted px-2 py-1 rounded">
+                  Will open: <span className="font-mono surface-1 px-2 py-1 rounded border">
                     {email.split('@')[1].toLowerCase()}
                   </span>
                 </div>
@@ -135,28 +192,31 @@ const Index = () => {
 
         {/* Problem Section */}
         <section>
-          <Card className="card-base max-w-4xl mx-auto text-center">
-            <CardContent className="space-y-8">
+          <Card className="card-elevated max-w-4xl mx-auto text-center">
+            <CardContent className="p-12 space-y-8">
               <h2 className="text-4xl font-bold text-destructive">
                 The Hidden Revenue Leak in Every SaaS
               </h2>
               <div className="grid md:grid-cols-3 gap-8">
-                <div>
-                  <div className="text-3xl font-bold text-destructive mb-2">27-61%</div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold text-destructive">27-61%</div>
                   <div className="text-muted-foreground">Signups never confirm</div>
                 </div>
-                <div>
-                  <div className="text-3xl font-bold text-destructive mb-2">$247K</div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold text-destructive">$247K</div>
                   <div className="text-muted-foreground">Lost ARR per year*</div>
                 </div>
-                <div>
-                  <div className="text-3xl font-bold text-destructive mb-2">0%</div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-bold text-destructive">0%</div>
                   <div className="text-muted-foreground">Teams fixing this</div>
                 </div>
               </div>
-              <p className="text-lg text-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-foreground max-w-2xl mx-auto leading-relaxed">
                 Your confirmation emails get buried in spam, lost in crowded inboxes, or simply forgotten. 
                 Meanwhile, you're bleeding paid traffic and missing activations.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                *Based on average SaaS with 10K monthly signups at $50 ACV
               </p>
             </CardContent>
           </Card>
@@ -164,7 +224,7 @@ const Index = () => {
 
         {/* Features Section */}
         <section>
-          <div className="text-center mb-12 space-y-4">
+          <div className="text-center mb-16 space-y-4">
             <h2 className="text-4xl font-bold text-foreground">
               Everything You Need to Fix Confirmation Drop-off
             </h2>
@@ -173,37 +233,37 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-8">
             {[
               {
-                icon: <Mail className="w-6 h-6" />,
+                icon: <Mail className="w-7 h-7" />,
                 title: "Auto ESP Detection",
-                description: "Instantly detects Gmail, Outlook, Yahoo, iCloud, ProtonMail"
+                description: "Instantly detects Gmail, Outlook, Yahoo, iCloud, ProtonMail and generates the perfect deep link"
               },
               {
-                icon: <Target className="w-6 h-6" />,
+                icon: <Target className="w-7 h-7" />,
                 title: "Spam Piercing", 
-                description: "Deep links work even when emails land in spam folders"
+                description: "Deep links work even when emails land in spam folders — never lose a signup again"
               },
               {
-                icon: <Zap className="w-6 h-6" />,
+                icon: <Zap className="w-7 h-7" />,
                 title: "Zero Backend",
-                description: "Pure client-side, 2KB script. No API calls or dependencies"
+                description: "Pure client-side, 2KB script. No API calls, no dependencies, no maintenance headaches"
               },
               {
-                icon: <Shield className="w-6 h-6" />,
+                icon: <Shield className="w-7 h-7" />,
                 title: "Mobile + Desktop",
-                description: "Works across all devices and email client apps"
+                description: "Works seamlessly across all devices and email client apps with native deep linking"
               }
             ].map((feature, index) => (
-              <Card key={index} className="card-base">
-                <CardContent className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-lg text-primary">
+              <Card key={index} className="card-elevated group">
+                <CardContent className="p-8 flex items-start gap-6">
+                  <div className="bg-primary/10 p-4 rounded-xl text-primary group-hover:bg-primary/15 transition-colors">
                     {feature.icon}
                   </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-2 text-foreground">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                  <div className="space-y-3">
+                    <h3 className="font-bold text-xl text-foreground">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -211,9 +271,9 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Testimonials */}
+        {/* Social Proof */}
         <section>
-          <div className="text-center mb-12 space-y-4">
+          <div className="text-center mb-16 space-y-4">
             <h2 className="text-4xl font-bold text-foreground">
               What Growth Teams Are Saying
             </h2>
@@ -222,7 +282,7 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 name: "Sarah Chen",
@@ -243,19 +303,19 @@ const Index = () => {
                 avatar: "👩‍🚀"
               }
             ].map((testimonial, index) => (
-              <Card key={index} className="card-base">
-                <CardContent className="space-y-4">
+              <Card key={index} className="card-elevated">
+                <CardContent className="p-8 space-y-6">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-foreground italic">"{testimonial.content}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl">{testimonial.avatar}</div>
+                  <p className="text-foreground italic text-lg leading-relaxed">"{testimonial.content}"</p>
+                  <div className="flex items-center gap-4">
+                    <div className="text-3xl">{testimonial.avatar}</div>
                     <div>
                       <div className="font-bold text-foreground">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                      <div className="text-muted-foreground">{testimonial.role}</div>
                     </div>
                   </div>
                 </CardContent>
@@ -266,15 +326,15 @@ const Index = () => {
 
         {/* CTA Section */}
         <section className="text-center space-y-8">
-          <Card className="card-base max-w-2xl mx-auto">
-            <CardContent className="space-y-6">
-              <h2 className="text-3xl font-bold text-foreground">
+          <Card className="card-elevated max-w-2xl mx-auto">
+            <CardContent className="p-12 space-y-8">
+              <h2 className="text-4xl font-bold text-foreground">
                 Ready to Stop Losing Signups?
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-lg">
                 Join 1,200+ SaaS companies using SniperLink to recover lost activations
               </p>
-              <Button className="btn-primary text-lg px-8 py-4">
+              <Button className="btn-primary text-lg px-12 py-4">
                 Start Free Trial
               </Button>
               <p className="text-sm text-muted-foreground">
@@ -286,8 +346,8 @@ const Index = () => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-muted/20">
-        <div className="max-w-7xl mx-auto px-6 py-8 text-center">
+      <footer className="border-t border-border surface-1 mt-32">
+        <div className="max-w-7xl mx-auto px-6 py-12 text-center">
           <p className="text-muted-foreground">
             © 2024 SniperLink. Built for SaaS teams who don't accept losing signups.
           </p>
