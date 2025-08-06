@@ -2,69 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @layer base {
   :root {
-    /* Light theme - Based on Superhuman principles */
-    --background: 0 0 100;        /* Pure white background */
-    --foreground: 0 0 9;          /* Deep gray text, not pure black */
-    --card: 0 0 98;               /* Slightly off-white for cards */
-    --card-foreground: 0 0 9;
-    --popover: 0 0 100;
-    --popover-foreground: 0 0 9;
-    --primary: 263 85 70;         /* Rich purple */
-    --primary-foreground: 0 0 100;
-    --secondary: 220 14 96;       /* Light gray */
-    --secondary-foreground: 0 0 9;
-    --muted: 220 14 96;
-    --muted-foreground: 220 9 46; /* Medium gray for secondary text */
-    --accent: 263 85 70;
-    --accent-foreground: 0 0 100;
-    --destructive: 0 84 60;
-    --destructive-foreground: 0 0 98;
-    --border: 220 13 91;
-    --input: 220 13 91;
-    --ring: 263 85 70;
+    /* Modern Light Theme */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 262 80% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 262 80% 60%;
     --radius: 0.75rem;
     
-    /* Surface elevations for light mode */
-    --surface-0: 0 0 100;    /* Background */
-    --surface-1: 0 0 98;     /* Cards */
-    --surface-2: 0 0 96;     /* Elevated elements */
-    --surface-3: 0 0 94;     /* Modals */
+    /* Brand gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(262, 80%, 60%) 0%, hsl(278, 70%, 65%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(240, 4.8%, 95.9%) 0%, hsl(240, 5.9%, 90%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(262, 80%, 60%) 0%, hsl(278, 70%, 65%) 50%, hsl(310, 60%, 70%) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
 
   .dark {
-    /* Dark theme - Following Superhuman's 5 principles */
+    /* Modern Dark Theme */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 262 80% 70%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 262 80% 70%;
     
-    /* Principle 1: Darken distant surfaces - 5 shades of gray */
-    --background: 0 0 8;          /* Dark gray, not pure black */
-    --foreground: 0 0 90;         /* Off-white text, not pure white (90% opacity) */
-    --card: 0 0 12;               /* Lighter than background for elevation */
-    --card-foreground: 0 0 90;
-    --popover: 0 0 16;            /* Even lighter for modals */
-    --popover-foreground: 0 0 90;
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(262, 80%, 70%) 0%, hsl(278, 70%, 75%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(240, 3.7%, 15.9%) 0%, hsl(240, 5%, 20%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(262, 80%, 70%) 0%, hsl(278, 70%, 75%) 50%, hsl(310, 60%, 80%) 100%);
     
-    /* Principle 5: Deepen colors - preserve hue, reduce lightness, increase saturation */
-    --primary: 263 95 55;         /* Deeper purple - more saturated, less light */
-    --primary-foreground: 0 0 90;
-    
-    --secondary: 0 0 16;          /* Dark gray surface */
-    --secondary-foreground: 0 0 90;
-    --muted: 0 0 16;
-    --muted-foreground: 0 0 65;   /* Principle 2: Adjust perceptual contrast (65% vs 60% in light) */
-    --accent: 263 95 55;
-    --accent-foreground: 0 0 90;
-    --destructive: 0 85 45;       /* Deeper red */
-    --destructive-foreground: 0 0 90;
-    --border: 0 0 16;
-    --input: 0 0 16;
-    --ring: 263 95 55;
-    
-    /* Surface elevations - Principle 1: Nearer surfaces are lighter */
-    --surface-0: 0 0 8;      /* Background - darkest */
-    --surface-1: 0 0 12;     /* Cards */
-    --surface-2: 0 0 16;     /* Elevated elements */
-    --surface-3: 0 0 20;     /* Modals - lightest */
+    /* Dark mode shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
   }
 }
 
@@ -74,103 +81,203 @@
   }
   
   html {
-    /* Enable smooth theme transitions */
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   body {
-    @apply bg-background text-foreground;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
-    /* Smooth theme transitions */
-    transition: background-color 0.3s ease, color 0.3s ease;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-optical-sizing: auto;
   }
   
-  /* Typography - Superhuman style hierarchy */
+  /* Modern Typography Scale */
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.025em;
-    line-height: 1.2;
+    line-height: 1.1;
+    color: hsl(var(--foreground));
   }
   
-  h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
-  h2 { font-size: clamp(2rem, 4vw, 3rem); }
-  h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+  h1 { 
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+  }
+  h2 { 
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+  h3 { 
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    font-weight: 600;
+  }
+  
+  p {
+    line-height: 1.6;
+    color: hsl(var(--muted-foreground));
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
 @layer components {
-  /* Surface components following elevation principles */
-  .surface-0 {
-    @apply bg-[hsl(var(--surface-0))];
+  /* Modern Component Styles */
+  
+  /* Gradient Backgrounds */
+  .gradient-primary {
+    background: var(--gradient-primary);
   }
   
-  .surface-1 {
-    @apply bg-[hsl(var(--surface-1))];
-    /* Subtle shadow for depth - Principle 4.3 */
-    box-shadow: 0 1px 3px 0 hsl(0 0 0 / 0.1), 0 1px 2px -1px hsl(0 0 0 / 0.1);
+  .gradient-secondary {
+    background: var(--gradient-secondary);
   }
   
-  .surface-2 {
-    @apply bg-[hsl(var(--surface-2))];
-    box-shadow: 0 4px 6px -1px hsl(0 0 0 / 0.1), 0 2px 4px -2px hsl(0 0 0 / 0.1);
+  .gradient-hero {
+    background: var(--gradient-hero);
   }
   
-  .surface-3 {
-    @apply bg-[hsl(var(--surface-3))];
-    box-shadow: 0 10px 15px -3px hsl(0 0 0 / 0.1), 0 4px 6px -4px hsl(0 0 0 / 0.1);
+  /* Modern Glass Effect */
+  .glass {
+    background: hsl(var(--background) / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.5);
   }
   
-  /* Button styles following deepened color principle */
-  .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium transition-all duration-200;
-    /* Subtle glow effect for dark mode */
-    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.2);
+  /* Enhanced Buttons */
+  .btn-gradient {
+    background: var(--gradient-primary);
+    @apply text-primary-foreground font-medium px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95;
+    box-shadow: var(--shadow-lg);
   }
   
-  .btn-primary:hover {
-    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.3), 0 4px 12px hsl(var(--primary) / 0.15);
-    transform: translateY(-1px);
+  .btn-gradient:hover {
+    box-shadow: var(--shadow-xl);
   }
   
-  .btn-secondary {
-    @apply surface-1 text-foreground hover:surface-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 border border-border;
+  .btn-outline-modern {
+    @apply border-2 border-primary/20 bg-background/50 text-foreground font-medium px-6 py-3 rounded-xl transition-all duration-200 hover:border-primary/40 hover:bg-primary/5;
+    backdrop-filter: blur(8px);
   }
   
-  .btn-secondary:hover {
-    transform: translateY(-1px);
+  /* Modern Cards */
+  .card-modern {
+    @apply bg-card border border-border/50 rounded-2xl p-6 transition-all duration-200 hover:border-border hover:shadow-lg;
+    box-shadow: var(--shadow-sm);
   }
   
-  /* Card component with proper elevation */
-  .card-elevated {
-    @apply surface-1 text-foreground border border-border rounded-lg p-6 transition-all duration-200;
-  }
-  
-  .card-elevated:hover {
-    @apply surface-2;
+  .card-modern:hover {
+    box-shadow: var(--shadow-md);
     transform: translateY(-2px);
   }
   
-  /* Input styling with proper contrast */
-  .input-styled {
-    @apply surface-1 text-foreground border border-border rounded-md px-3 py-2 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200;
+  /* Enhanced Inputs */
+  .input-modern {
+    @apply bg-background border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
+    box-shadow: var(--shadow-sm);
   }
   
-  /* Theme toggle button */
-  .theme-toggle {
-    @apply surface-1 hover:surface-2 p-2 rounded-lg border border-border transition-all duration-200;
+  .input-modern:focus {
+    box-shadow: var(--shadow-md);
   }
   
-  /* Glassmorphism effect for hero sections - Principle 3: Reduce large bright blocks */
-  .glass-subtle {
-    background: linear-gradient(135deg, 
-      hsl(var(--primary) / 0.03) 0%, 
-      hsl(var(--primary) / 0.01) 100%);
-    backdrop-filter: blur(20px);
-    border: 1px solid hsl(var(--border));
+  /* Badge Styles */
+  .badge-modern {
+    @apply bg-secondary/50 text-secondary-foreground px-3 py-1 rounded-full text-sm font-medium border border-border/50;
+    backdrop-filter: blur(8px);
   }
   
-  /* Success state styling */
-  .success-glow {
-    @apply bg-green-500/10 border-green-500/20 text-green-700 dark:text-green-400;
-    box-shadow: 0 0 20px hsl(142 76 36 / 0.1);
+  .badge-success {
+    @apply bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20;
+  }
+  
+  .badge-warning {
+    @apply bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20;
+  }
+  
+  /* Section Styles */
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+  
+  .container-modern {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Animation Classes */
+  .fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+  
+  /* Hero Background */
+  .hero-bg {
+    background: radial-gradient(ellipse at center top, hsl(var(--primary) / 0.1) 0%, transparent 70%);
+  }
+  
+  /* Focus Ring */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
+
+@layer utilities {
+  /* Custom Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Text Gradient */
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Scrollbar Styling */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
   }
 }
