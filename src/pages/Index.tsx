@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-
+import { trackEvent } from "@/lib/analytics";
 const ThemeToggle = () => {
   const [theme, setTheme] = useState('light');
   
@@ -24,8 +24,8 @@ const ThemeToggle = () => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    trackEvent('theme_toggle', { theme: newTheme });
   };
-  
   return (
     <Button
       variant="ghost"
@@ -66,7 +66,11 @@ const Index = () => {
   };
 
   const handleSniperTry = async () => {
+    const domain = email.includes("@") ? email.split("@")[1].toLowerCase() : null;
+    trackEvent("link_generate_attempt", { emailDomain: domain });
+
     if (!email.includes("@")) {
+      trackEvent("link_generate_invalid_email");
       toast({
         title: "Invalid email",
         description: "Please enter a valid email address",
@@ -81,6 +85,7 @@ const Index = () => {
     setTimeout(() => {
       setIsLoading(false);
       if (!link) {
+        trackEvent("link_generate_unsupported_provider", { emailDomain: domain });
         toast({
           title: "Provider not supported",
           description: "This email provider is not yet supported",
@@ -98,6 +103,7 @@ const Index = () => {
         description: "Link copied to clipboard and opening inbox",
       });
       
+      trackEvent("link_generate_success", { emailDomain: domain });
       window.open(link, "_blank");
     }, 1200);
   };
