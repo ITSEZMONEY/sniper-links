@@ -146,7 +146,7 @@ const Index = () => {
                 
                 <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl text-balance">
                   Sniper Link — 
-                  <span className="text-gradient block mt-2">recover lost signups instantly</span>
+                  <span className="text-gradient block mt-2">Recover Up to 61% of Lost Signups Instantly</span>
                 </h1>
                 
                 <p className="mb-12 text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed text-balance">
