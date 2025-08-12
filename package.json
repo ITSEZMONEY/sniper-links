@@ -1,23 +1,22 @@
 {
   "name": "sniper-links",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Drop-in JavaScript widget that generates deep links to email inboxes to recover lost signups",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:widget": "vite build --config vite.widget.config.ts"
   },
   "dependencies": {
-    "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.1.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.462.0",
-    "mixpanel-browser": "^2.67.0",
-    "posthog-js": "^1.259.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
@@ -35,5 +34,16 @@
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "vite": "^5.4.1"
-  }
+  },
+  "keywords": [
+    "email",
+    "signup",
+    "onboarding",
+    "widget",
+    "deep-links",
+    "saas",
+    "growth"
+  ],
+  "author": "SniperLinks Team",
+  "license": "MIT"
 }

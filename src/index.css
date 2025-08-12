@@ -6,7 +6,6 @@
 
 @layer base {
   :root {
-    /* Modern Light Theme */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -27,21 +26,9 @@
     --input: 240 5.9% 90%;
     --ring: 262 80% 60%;
     --radius: 0.75rem;
-    
-    /* Brand gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(262, 80%, 60%) 0%, hsl(278, 70%, 65%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(240, 4.8%, 95.9%) 0%, hsl(240, 5.9%, 90%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(262, 80%, 60%) 0%, hsl(278, 70%, 65%) 50%, hsl(310, 60%, 70%) 100%);
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
 
   .dark {
-    /* Modern Dark Theme */
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -61,17 +48,6 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 262 80% 70%;
-    
-    /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(262, 80%, 70%) 0%, hsl(278, 70%, 75%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(240, 3.7%, 15.9%) 0%, hsl(240, 5%, 20%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(262, 80%, 70%) 0%, hsl(278, 70%, 75%) 50%, hsl(310, 60%, 80%) 100%);
-    
-    /* Dark mode shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
   }
 }
 
@@ -93,191 +69,42 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     font-optical-sizing: auto;
   }
-  
-  /* Modern Typography Scale */
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
-    color: hsl(var(--foreground));
-  }
-  
-  h1 { 
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    font-weight: 700;
-    letter-spacing: -0.05em;
-  }
-  h2 { 
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-  }
-  h3 { 
-    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
-    font-weight: 600;
-  }
-  
-  p {
-    line-height: 1.6;
-    color: hsl(var(--muted-foreground));
-  }
-  
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-@layer components {
-  /* Modern Component Styles */
-  
-  /* Gradient Backgrounds */
-  .gradient-primary {
-    background: var(--gradient-primary);
-  }
-  
-  .gradient-secondary {
-    background: var(--gradient-secondary);
-  }
-  
-  .gradient-hero {
-    background: var(--gradient-hero);
-  }
-  
-  /* Modern Glass Effect */
-  .glass {
-    background: hsl(var(--background) / 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--border) / 0.5);
-  }
-  
-  /* Enhanced Buttons */
-  .btn-gradient {
-    background: var(--gradient-primary);
-    @apply text-primary-foreground font-medium px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95;
-    box-shadow: var(--shadow-lg);
-  }
-  
-  .btn-gradient:hover {
-    box-shadow: var(--shadow-xl);
-  }
-  
-  .btn-outline-modern {
-    @apply border-2 border-primary/20 bg-background/50 text-foreground font-medium px-6 py-3 rounded-xl transition-all duration-200 hover:border-primary/40 hover:bg-primary/5;
-    backdrop-filter: blur(8px);
-  }
-  
-  /* Modern Cards */
-  .card-modern {
-    @apply bg-card border border-border/50 rounded-2xl p-6 transition-all duration-200 hover:border-border hover:shadow-lg;
-    box-shadow: var(--shadow-sm);
-  }
-  
-  .card-modern:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-  }
-  
-  /* Enhanced Inputs */
-  .input-modern {
-    @apply bg-background border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
-    box-shadow: var(--shadow-sm);
-  }
-  
-  .input-modern:focus {
-    box-shadow: var(--shadow-md);
-  }
-  
-  /* Badge Styles */
-  .badge-modern {
-    @apply bg-secondary/50 text-secondary-foreground px-3 py-1 rounded-full text-sm font-medium border border-border/50;
-    backdrop-filter: blur(8px);
-  }
-  
-  .badge-success {
-    @apply bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20;
-  }
-  
-  .badge-warning {
-    @apply bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20;
-  }
-  
-  /* Section Styles */
-  .section-padding {
-    @apply py-16 md:py-24 lg:py-32;
-  }
-  
-  .container-modern {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-  
-  /* Animation Classes */
-  .fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-  }
-  
-  .slide-up {
-    animation: slideUp 0.6s ease-out forwards;
-  }
-  
-  /* Hero Background */
-  .hero-bg {
-    background: radial-gradient(ellipse at center top, hsl(var(--primary) / 0.1) 0%, transparent 70%);
-  }
-  
-  /* Focus Ring */
-  .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
-  }
 }
 
 @layer utilities {
-  /* Custom Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .text-balance {
+    text-wrap: balance;
   }
   
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .animate-in {
+    animation: fadeIn 0.5s ease-out;
   }
   
-  /* Text Gradient */
-  .text-gradient {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .slide-in-from-bottom-8 {
+    animation: slideInFromBottom 0.5s ease-out;
   }
   
-  /* Scrollbar Styling */
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
   }
-  
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 4px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
+  to {
+    opacity: 1;
   }
-  
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--muted-foreground) / 0.3);
-    border-radius: 2px;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

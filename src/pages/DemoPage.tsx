@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Home } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
-const NotFound = () => {
+const DemoPage = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">
-        <h1 className="text-6xl font-bold mb-4">404</h1>
-        <p className="text-xl text-muted-foreground mb-8">Page not found</p>
+        <h1 className="text-4xl font-bold mb-4">Demo Page</h1>
+        <p className="text-muted-foreground mb-8">Interactive demo coming soon...</p>
         <Button asChild>
           <Link to="/">
-            <Home className="mr-2 h-4 w-4" />
-            Go Home
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
           </Link>
         </Button>
       </div>
@@ -20,4 +20,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound;
+export default DemoPage;
