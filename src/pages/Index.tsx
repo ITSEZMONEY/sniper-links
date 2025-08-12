@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 const ThemeToggle = () => {
@@ -124,6 +125,8 @@ const Index = () => {
         </div>
       </nav>
 
+      <main role="main" id="main-content">
+
       {/* Hero Section */}
       <section className="relative overflow-hidden hero-bg">
         <div className="section-padding">
@@ -157,8 +160,13 @@ const Index = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex gap-3">
+                      <div className="sr-only">
+                        <Label htmlFor="signup-email">Email address</Label>
+                      </div>
                       <Input
+                        id="signup-email"
                         type="email"
+                        aria-label="Email address"
                         placeholder="user@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -475,6 +483,7 @@ const Index = () => {
         </div>
       </section>
       
+      </main>
       {/* Footer */}
       <footer className="border-t border-border/50 bg-secondary/30 py-12">
         <div className="container-modern">
