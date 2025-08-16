@@ -234,6 +234,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ by the SniperLink Team**
+**Made by EZ MONEY**
 
 *Stop losing signups forever.*
