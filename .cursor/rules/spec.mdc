@@ -1,0 +1,5 @@
+Goal: Ship a vertical slice today.
+MVP user story: As a <role>, I can <action> to <value>.
+Critical flow: <1 sentence>.
+Tech: Next.js (app router), Supabase (auth/db), Tailwind, shadcn/ui, Vercel.
+DoD: deployed URL + one happy-path e2e + docs/FEATURE.md.

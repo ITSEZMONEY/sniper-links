@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { generateSniperLink, detectESP, trackEvent } from "@/lib/sniper-link";
 import { Link } from "react-router-dom";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 const ThemeToggle = () => {
   const [theme, setTheme] = useState('light');
@@ -65,7 +66,7 @@ const HomePage = () => {
     setIsLoading(true);
     const link = generateSniperLink(email);
     
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsLoading(false);
       if (!link) {
         trackEvent("link_generate_unsupported_provider", { emailDomain: domain });
@@ -77,17 +78,28 @@ const HomePage = () => {
         return;
       }
       
-      navigator.clipboard.writeText(link);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-      
-      toast({
-        title: "Success!",
-        description: "Link copied to clipboard and opening inbox",
-      });
-      
-      trackEvent("link_generate_success", { emailDomain: domain });
-      window.open(link, "_blank");
+      try {
+        await navigator.clipboard.writeText(link);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+        
+        toast({
+          title: "Success!",
+          description: "Link copied to clipboard and opening inbox",
+        });
+        
+        trackEvent("link_generate_success", { emailDomain: domain });
+        window.open(link, "_blank");
+      } catch (error) {
+        console.error('Failed to copy to clipboard:', error);
+        toast({
+          title: "Link generated!",
+          description: "Opening inbox (clipboard access denied)",
+        });
+        
+        trackEvent("link_generate_success", { emailDomain: domain });
+        window.open(link, "_blank");
+      }
     }, 1200);
   };
 
@@ -111,8 +123,8 @@ const HomePage = () => {
             <Button variant="ghost" asChild>
               <Link to="/embed-generator">Generator</Link>
             </Button>
-            <Button variant="outline">
-              Sign In
+            <Button variant="ghost" asChild>
+              <Link to="/docs">Docs</Link>
             </Button>
             <ThemeToggle />
           </div>
@@ -382,6 +394,17 @@ const HomePage = () => {
                 </Link>
               </Button>
             </div>
+          </div>
+        </section>
+
+        {/* Newsletter Section */}
+        <section className="py-20 px-4 bg-secondary/30">
+          <div className="container mx-auto max-w-2xl">
+            <NewsletterSignup 
+              title="Stay in the Loop"
+              description="Get updates on new features, growth tips, and success stories from SniperLink users."
+              buttonText="Subscribe to Newsletter"
+            />
           </div>
         </section>
       </main>

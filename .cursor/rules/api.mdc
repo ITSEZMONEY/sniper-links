@@ -1,0 +1,7 @@
+---
+description: API & validation standards
+globs: ["app/api/**", "app/**/actions.ts", "lib/**"]
+alwaysApply: false
+---
+- Validate inputs with Zod; export types from schemas
+- Return typed JSON only; no thrown raw errors (map to 4xx/5xx)

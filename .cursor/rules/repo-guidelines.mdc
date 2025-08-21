@@ -1,0 +1,9 @@
+---
+description: Repo-wide build rules
+alwaysApply: true
+---
+- Stack: Next.js (app router) + Supabase + Tailwind + shadcn/ui; deploy on Vercel
+- TypeScript strict; Zod at boundaries; server actions where trivial
+- Components/hooks <150 LOC; prefer extraction over cleverness; early returns
+- No TODOs left in code; keep dead code out
+- One happy-path Playwright test per shipped slice; docs page per feature
