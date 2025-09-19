@@ -40,33 +40,33 @@ const ESP_CONFIGS: ESPConfig[] = [
   {
     name: 'Outlook',
     domains: ['outlook.com', 'live.com', 'hotmail.com', 'msn.com'],
-    desktopUrl: 'https://outlook.live.com/mail/0/inbox/search/id/',
-    mobileUrl: 'ms-outlook://mail/search/',
+    desktopUrl: 'https://outlook.live.com/mail/0/search/query/',
+    mobileUrl: 'ms-outlook://search?query=',
     searchParams: {
-      from: '',
-      newerThan: '',
+      from: 'from:',
+      newerThan: 'received:>=1d',
       searchScope: ''
     }
   },
   {
     name: 'Yahoo',
-    domains: ['yahoo.com', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.com.au'],
+    domains: ['yahoo.com', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.com.au', 'yahoo.fr', 'yahoo.de'],
     desktopUrl: 'https://mail.yahoo.com/d/search/keyword=',
-    mobileUrl: 'ymail://mail/search/',
+    mobileUrl: 'ymail://mail/search?query=',
     searchParams: {
-      from: 'from%253A',
-      newerThan: '',
+      from: 'from%3A',
+      newerThan: 'after%3A1d',
       searchScope: ''
     }
   },
   {
     name: 'ProtonMail',
-    domains: ['protonmail.com', 'proton.me'],
-    desktopUrl: 'https://mail.proton.me/u/0/all-mail#',
-    mobileUrl: 'protonmail://mail/search/',
+    domains: ['protonmail.com', 'proton.me', 'pm.me'],
+    desktopUrl: 'https://mail.proton.me/u/0/all-mail#keyword=',
+    mobileUrl: 'protonmail://search?query=',
     searchParams: {
-      from: 'from=',
-      newerThan: '',
+      from: 'from:',
+      newerThan: 'begin:1d',
       searchScope: ''
     }
   },
@@ -78,6 +78,39 @@ const ESP_CONFIGS: ESPConfig[] = [
     searchParams: {
       from: '',
       newerThan: '',
+      searchScope: ''
+    }
+  },
+  {
+    name: 'AOL',
+    domains: ['aol.com', 'aim.com', 'verizon.net'],
+    desktopUrl: 'https://mail.aol.com/webmail-std/en-us/suite#search=',
+    mobileUrl: 'aol://mail/search?query=',
+    searchParams: {
+      from: 'from:',
+      newerThan: 'after:1d',
+      searchScope: ''
+    }
+  },
+  {
+    name: 'HEY',
+    domains: ['hey.com'],
+    desktopUrl: 'https://app.hey.com/search?q=',
+    mobileUrl: 'hey://search?query=',
+    searchParams: {
+      from: 'from:',
+      newerThan: 'after:1d',
+      searchScope: ''
+    }
+  },
+  {
+    name: 'Mail.ru',
+    domains: ['mail.ru', 'bk.ru', 'inbox.ru', 'list.ru'],
+    desktopUrl: 'https://e.mail.ru/messages/search/',
+    mobileUrl: 'mailru://search?query=',
+    searchParams: {
+      from: 'from:',
+      newerThan: 'date:1d',
       searchScope: ''
     }
   }
@@ -95,64 +128,217 @@ export function detectESP(email: string): ESPConfig | null {
 export function generateSniperLink(email: string, config: SniperLinkConfig = {}): string | null {
   const esp = detectESP(email);
   if (!esp) return null;
-  
+
   const sender = config.sender || '@yourdomain.com';
-  const encodedSender = encodeURIComponent(sender);
-  
+  const cleanSender = sender.startsWith('@') ? sender.slice(1) : sender;
+
   let url = esp.desktopUrl;
-  
+
   // Build search parameters based on ESP
-  if (esp.name === 'Gmail') {
-    url += `${esp.searchParams.from}${encodedSender}+${esp.searchParams.searchScope}+${esp.searchParams.newerThan}`;
-  } else if (esp.name === 'Outlook') {
-    url += encodedSender;
-  } else if (esp.name === 'Yahoo') {
-    url += `${esp.searchParams.from}${encodedSender}`;
-  } else if (esp.name === 'ProtonMail') {
-    url += `${esp.searchParams.from}${encodedSender}`;
-  } else if (esp.name === 'iCloud') {
-    // iCloud doesn't support deep linking to specific emails
-    url = 'https://www.icloud.com/mail/';
+  switch (esp.name) {
+    case 'Gmail':
+      const gmailQuery = `${esp.searchParams.from}${encodeURIComponent(cleanSender)}+${esp.searchParams.searchScope}+${esp.searchParams.newerThan}`;
+      url += gmailQuery;
+      break;
+
+    case 'Outlook':
+      const outlookQuery = `${esp.searchParams.from}${cleanSender} ${esp.searchParams.newerThan}`;
+      url += encodeURIComponent(outlookQuery);
+      break;
+
+    case 'Yahoo':
+      const yahooQuery = `${esp.searchParams.from}${encodeURIComponent(cleanSender)} ${esp.searchParams.newerThan}`;
+      url += yahooQuery;
+      break;
+
+    case 'ProtonMail':
+      const protonQuery = `${esp.searchParams.from}${cleanSender} ${esp.searchParams.newerThan}`;
+      url += encodeURIComponent(protonQuery);
+      break;
+
+    case 'AOL':
+      const aolQuery = `${esp.searchParams.from}${cleanSender} ${esp.searchParams.newerThan}`;
+      url += encodeURIComponent(aolQuery);
+      break;
+
+    case 'HEY':
+      const heyQuery = `${esp.searchParams.from}${cleanSender} ${esp.searchParams.newerThan}`;
+      url += encodeURIComponent(heyQuery);
+      break;
+
+    case 'Mail.ru':
+      const mailruQuery = `${esp.searchParams.from}${cleanSender} ${esp.searchParams.newerThan}`;
+      url += encodeURIComponent(mailruQuery);
+      break;
+
+    case 'iCloud':
+      // iCloud doesn't support deep linking to specific emails, just open mail
+      url = 'https://www.icloud.com/mail/';
+      break;
+
+    default:
+      // Generic fallback
+      url += encodeURIComponent(cleanSender);
   }
-  
+
   return url;
 }
 
 export function generateMobileLink(email: string, config: SniperLinkConfig = {}): string | null {
   const esp = detectESP(email);
   if (!esp?.mobileUrl) return null;
-  
+
   const sender = config.sender || '@yourdomain.com';
-  const encodedSender = encodeURIComponent(sender);
-  
-  return `${esp.mobileUrl}${encodedSender}`;
+  const cleanSender = sender.startsWith('@') ? sender.slice(1) : sender;
+
+  // Build mobile-specific search queries
+  switch (esp.name) {
+    case 'Gmail':
+      return `${esp.mobileUrl}${encodeURIComponent(cleanSender)}`;
+
+    case 'Outlook':
+      return `${esp.mobileUrl}${encodeURIComponent(`from:${cleanSender}`)}`;
+
+    case 'Yahoo':
+      return `${esp.mobileUrl}${encodeURIComponent(`from:${cleanSender}`)}`;
+
+    case 'ProtonMail':
+      return `${esp.mobileUrl}${encodeURIComponent(`from:${cleanSender}`)}`;
+
+    case 'AOL':
+      return `${esp.mobileUrl}${encodeURIComponent(`from:${cleanSender}`)}`;
+
+    case 'HEY':
+      return `${esp.mobileUrl}${encodeURIComponent(`from:${cleanSender}`)}`;
+
+    case 'Mail.ru':
+      return `${esp.mobileUrl}${encodeURIComponent(`from:${cleanSender}`)}`;
+
+    default:
+      return `${esp.mobileUrl}${encodeURIComponent(cleanSender)}`;
+  }
 }
 
-export function getFallbackInstructions(email: string): string {
+export function getFallbackInstructions(email: string, sender?: string): string {
   const esp = detectESP(email);
+  const senderDomain = sender ? (sender.startsWith('@') ? sender.slice(1) : sender) : 'your app';
+
   if (!esp) {
-    return `Please check your email inbox for the confirmation message. You can search for emails from your app's domain.`;
+    return `Please check your email inbox for the confirmation message from ${senderDomain}. Try searching for emails from this domain in your inbox, including spam/junk folders.`;
   }
-  
+
   const instructions = {
-    'Gmail': 'Check your Gmail inbox, including the Spam and Promotions folders. Search for emails from your app.',
-    'Outlook': 'Check your Outlook inbox, including the Junk folder. Search for emails from your app.',
-    'Yahoo': 'Check your Yahoo Mail inbox, including the Spam folder. Search for emails from your app.',
-    'ProtonMail': 'Check your ProtonMail inbox, including the Spam folder. Search for emails from your app.',
-    'iCloud': 'Check your iCloud Mail inbox. Search for emails from your app.'
+    'Gmail': `Open Gmail and search for "from:${senderDomain}" - check your Inbox, Spam, and Promotions tabs.`,
+    'Outlook': `Open Outlook and search for "from:${senderDomain}" - check your Inbox and Junk Email folder.`,
+    'Yahoo': `Open Yahoo Mail and search for "from:${senderDomain}" - check your Inbox and Spam folder.`,
+    'ProtonMail': `Open ProtonMail and search for "from:${senderDomain}" - check All Mail including Spam folder.`,
+    'iCloud': `Open iCloud Mail and search for emails from ${senderDomain} - check all folders including Junk.`,
+    'AOL': `Open AOL Mail and search for "from:${senderDomain}" - check your Inbox and Spam folder.`,
+    'HEY': `Open HEY and search for "from:${senderDomain}" - check The Feed and Screener sections.`,
+    'Mail.ru': `Open Mail.ru and search for "from:${senderDomain}" - check your Inbox and Spam folder.`
   };
-  
+
   return instructions[esp.name as keyof typeof instructions] || instructions['Gmail'];
 }
 
-// Analytics tracking
+// Analytics tracking with multiple providers
 export function trackEvent(event: string, properties?: Record<string, any>) {
+  const trackingData = {
+    event,
+    timestamp: new Date().toISOString(),
+    url: typeof window !== 'undefined' ? window.location.href : '',
+    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+    ...properties
+  };
+
+  // Google Analytics (gtag)
   if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', event, properties);
+    window.gtag('event', event, {
+      event_category: 'SniperLink',
+      event_label: properties?.esp || properties?.emailDomain || 'unknown',
+      value: properties?.linkType === 'mobile' ? 1 : 0,
+      custom_parameters: properties
+    });
   }
-  
-  // Fallback to console for development
+
+  // PostHog tracking
+  if (typeof window !== 'undefined' && (window as any).posthog) {
+    (window as any).posthog.capture(event, trackingData);
+  }
+
+  // Mixpanel tracking
+  if (typeof window !== 'undefined' && (window as any).mixpanel) {
+    (window as any).mixpanel.track(event, trackingData);
+  }
+
+  // Console logging for development
   if (process.env.NODE_ENV === 'development') {
-    console.log('SniperLink Event:', event, properties);
+    console.log('📊 SniperLink Analytics:', {
+      event,
+      properties: trackingData
+    });
   }
+
+  // Optional: Send to custom analytics endpoint
+  if (typeof window !== 'undefined' && properties?.sendToAPI !== false) {
+    sendAnalyticsBeacon(event, trackingData);
+  }
+}
+
+// Send analytics beacon (non-blocking)
+function sendAnalyticsBeacon(event: string, data: Record<string, any>) {
+  try {
+    // Use sendBeacon for non-blocking analytics
+    if (navigator.sendBeacon) {
+      const payload = JSON.stringify({
+        event,
+        data,
+        source: 'sniperlink-widget'
+      });
+
+      // In production, this would go to your analytics endpoint
+      // navigator.sendBeacon('https://api.sniperlinks.com/analytics', payload);
+    }
+  } catch (error) {
+    console.warn('Analytics beacon failed:', error);
+  }
+}
+
+// Enhanced analytics functions for specific events
+export function trackWidgetLoad(config: SniperLinkConfig) {
+  trackEvent('widget_load', {
+    sender: config.sender?.replace(/[^@\w.-]/g, ''), // Sanitized sender
+    buttonStyle: config.buttonStyle,
+    showBranding: config.showBranding,
+    loadTime: performance.now()
+  });
+}
+
+export function trackLinkGeneration(email: string, esp: any, success: boolean, config: SniperLinkConfig) {
+  trackEvent('link_generation', {
+    emailDomain: email.split('@')[1]?.toLowerCase(),
+    esp: esp?.name || 'unknown',
+    success,
+    sender: config.sender,
+    buttonStyle: config.buttonStyle,
+    mobileSupported: !!esp?.mobileUrl
+  });
+}
+
+export function trackLinkClick(link: string, esp: string, linkType: 'desktop' | 'mobile' | 'fallback') {
+  trackEvent('link_click', {
+    esp,
+    linkType,
+    hasQuery: link.includes('?'),
+    domain: new URL(link).hostname
+  });
+}
+
+export function trackError(error: string, context?: Record<string, any>) {
+  trackEvent('widget_error', {
+    error: error.substring(0, 100), // Limit error message length
+    context,
+    userAgent: navigator.userAgent,
+    timestamp: Date.now()
+  });
 }
