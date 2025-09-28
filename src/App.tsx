@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import DemoPage from "./pages/DemoPage";
 import EmbedGenerator from "./pages/EmbedGenerator";
 import DocsPage from "./pages/DocsPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -18,6 +19,7 @@ const App = () => (
         <Route path="/demo" element={<DemoPage />} />
         <Route path="/embed-generator" element={<EmbedGenerator />} />
         <Route path="/docs" element={<DocsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

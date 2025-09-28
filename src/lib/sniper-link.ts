@@ -119,9 +119,11 @@ const ESP_CONFIGS: ESPConfig[] = [
 export function detectESP(email: string): ESPConfig | null {
   const domain = email.split('@')[1]?.toLowerCase();
   if (!domain) return null;
-  
-  return ESP_CONFIGS.find(esp => 
-    esp.domains.some(espDomain => domain.includes(espDomain))
+
+  return ESP_CONFIGS.find(esp =>
+    esp.domains.some(espDomain =>
+      domain === espDomain || domain.endsWith('.' + espDomain)
+    )
   ) || null;
 }
 
