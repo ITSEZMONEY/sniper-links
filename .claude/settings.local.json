@@ -9,7 +9,10 @@
       "Bash(git add:*)",
       "Bash(git push:*)",
       "Bash(npm run dev:*)",
-      "Bash(npm run type-check:*)"
+      "Bash(npm run type-check:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Complete SniperLink v1.0 launch-ready implementation\n\n🚀 Launch-Critical Features:\n- Email provider detection for 8+ major providers\n- Secure inbox deep link generation\n- Privacy policy and GDPR compliance\n- Analytics setup (Plausible/GA4/PostHog)\n- SEO optimization with sitemap and meta tags\n- Social sharing OG image generator\n- Deployment config for Vercel\n\n🔧 Technical Improvements:\n- Fixed TypeScript configuration errors\n- Enhanced domain matching security\n- Mobile and desktop deep link support\n- Graceful fallbacks for unsupported providers\n- GitHub Actions CI/CD pipeline\n\n📄 Documentation:\n- Complete launch checklist\n- Deployment guide\n- Privacy policy page\n\nReady for production deployment and user launch.\n\n🤖 Generated with [Claude Code](https://claude.ai/code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git pull:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
