@@ -291,7 +291,7 @@ export function trackEvent(event: string, properties?: Record<string, any>) {
 function sendAnalyticsBeacon(event: string, data: Record<string, any>) {
   try {
     // Use sendBeacon for non-blocking analytics
-    if (typeof navigator.sendBeacon === 'function') {
+    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
       const payload = JSON.stringify({
         event,
         data,
