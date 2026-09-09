@@ -392,7 +392,7 @@ const DocsPage = () => {
                     <li>• <code className="bg-background px-1 rounded">container</code>: A wrapper that holds the entire button</li>
                     <li>• <code className="bg-background px-1 rounded">button</code>: The clickable element</li>
                     <li>• <code className="bg-background px-1 rounded">image</code>: A logo representing the email provider</li>
-                    <li>• <code className="bg-background px-1 rounded">text</code>: A label, by default showing "Open in {provider}"</li>
+                    <li>• <code className="bg-background px-1 rounded">text</code>: A label, by default showing "Open in {'{provider}'}"</li>
                   </ul>
                   
                   <CodeBlock language="css">
@@ -430,7 +430,7 @@ sniper-link::part(text) {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground mb-4">
-                    The default text on the SniperLink button is "Open in {provider}", but you can change it using the <code className="bg-background px-1 rounded">template</code> attribute:
+                    The default text on the SniperLink button is "Open in {'{provider}'}", but you can change it using the <code className="bg-background px-1 rounded">template</code> attribute:
                   </p>
                   <CodeBlock language="html">
 {`<sniper-link
