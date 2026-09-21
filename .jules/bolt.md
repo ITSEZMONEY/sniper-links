@@ -1,0 +1,3 @@
+## 2024-05-24 - Pre-compute Static Configuration Maps
+**Learning:** In `src/lib/sniper-link.ts`, the `detectESP` function was performing an O(n*m) nested array search (`find` + `some`) for *every* generation step (4+ times per user interaction). This pattern is an anti-pattern when checking exact matches against static configuration like domain names.
+**Action:** When searching exact strings in static arrays, create a pre-computed `Map` or `Set` during initialization. Always use O(1) lookups for exact matches and only fall back to O(n) array methods for dynamic/partial matching (like `.endsWith()`).
