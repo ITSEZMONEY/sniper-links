@@ -14,6 +14,17 @@ import {
   ESPConfig
 } from '../lib/sniper-link';
 
+// Helper to prevent XSS
+function escapeHTML(str: string): string {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // Widget configuration interface
 interface WidgetConfig extends SniperLinkConfig {
   containerId?: string;
@@ -124,7 +135,7 @@ class SniperLinkWidget {
         />
         <button
           id="sniperlink-submit"
-          class="sniperlink-button sniperlink-button-${this.config.buttonStyle}"
+          class="sniperlink-button sniperlink-button-${escapeHTML(this.config.buttonStyle || 'default')}"
         >
           Generate Link
         </button>
@@ -172,15 +183,15 @@ class SniperLinkWidget {
       <div class="sniperlink-container">
         <button
           id="sniperlink-button"
-          class="sniperlink-button sniperlink-button-${this.config.buttonStyle}"
-          data-link="${link}"
-          data-esp="${esp.name}"
+          class="sniperlink-button sniperlink-button-${escapeHTML(this.config.buttonStyle || 'default')}"
+          data-link="${escapeHTML(link)}"
+          data-esp="${escapeHTML(esp.name)}"
         >
           <span class="sniperlink-icon">📧</span>
-          ${buttonText}
+          ${escapeHTML(buttonText)}
         </button>
         <div class="sniperlink-info">
-          <small>Opens ${esp.name} to find your confirmation email</small>
+          <small>Opens ${escapeHTML(esp.name)} to find your confirmation email</small>
         </div>
         ${this.config.showBranding ? this.getBrandingHTML() : ''}
       </div>
@@ -205,7 +216,7 @@ class SniperLinkWidget {
       <div class="sniperlink-fallback">
         <div class="sniperlink-fallback-icon">⚠️</div>
         <h4>Manual Instructions</h4>
-        <p>${instructions}</p>
+        <p>${escapeHTML(instructions)}</p>
         ${this.config.showBranding ? this.getBrandingHTML() : ''}
       </div>
     `;
@@ -323,7 +334,7 @@ class SniperLinkWidget {
       }
 
       .sniperlink-button-custom {
-        background: ${this.config.buttonColor || '#6366F1'};
+        background: ${escapeHTML(this.config.buttonColor || '#6366F1')};
       }
 
       .sniperlink-icon {
