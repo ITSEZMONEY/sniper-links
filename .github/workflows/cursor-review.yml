@@ -6,10 +6,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
+      - name: Check for API Key
+        id: check_key
+        run: |
+          if [ -z "${{ secrets.CURSOR_API_KEY }}" ]; then
+            echo "has_key=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_key=true" >> $GITHUB_OUTPUT
+          fi
+      - name: Install Cursor Agent
+        if: steps.check_key.outputs.has_key == 'true'
+        run: |
           curl https://cursor.com/install -fsS | bash
           echo "$HOME/.cursor/bin" >> $GITHUB_PATH
-      - run: |
+      - name: Run Cursor Agent
+        if: steps.check_key.outputs.has_key == 'true'
+        run: |
           cursor-agent -p "You are an automated code reviewer. Focus on security issues, logic bugs, missing tests, and code style. Provide detailed feedback on the PR changes." --model gpt-4
         env:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
