@@ -116,13 +116,26 @@ const ESP_CONFIGS: ESPConfig[] = [
   }
 ];
 
+// Pre-compute domain map for O(1) exact lookups
+const ESP_DOMAIN_MAP = new Map<string, ESPConfig>();
+ESP_CONFIGS.forEach(esp => {
+  esp.domains.forEach(domain => {
+    ESP_DOMAIN_MAP.set(domain.toLowerCase(), esp);
+  });
+});
+
 export function detectESP(email: string): ESPConfig | null {
   const domain = email.split('@')[1]?.toLowerCase();
   if (!domain) return null;
 
+  // 1. O(1) hash map lookup for exact domain matches (Bolt optimization)
+  const exactMatch = ESP_DOMAIN_MAP.get(domain);
+  if (exactMatch) return exactMatch;
+
+  // 2. Fallback O(n) search for subdomains
   return ESP_CONFIGS.find(esp =>
     esp.domains.some(espDomain =>
-      domain === espDomain || domain.endsWith('.' + espDomain)
+      domain.endsWith('.' + espDomain)
     )
   ) || null;
 }
