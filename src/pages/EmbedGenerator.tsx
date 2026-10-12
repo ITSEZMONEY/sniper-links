@@ -1,426 +1,77 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
-import {
-  ArrowLeft,
-  Copy,
-  CheckCircle,
-  Code,
-  Eye,
-  Target,
-  Palette,
-  Settings,
-  Sparkles,
-  Download
-} from 'lucide-react';
-import { trackEvent } from '@/lib/sniper-link';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import SiteLayout from '@/components/SiteLayout';
+import WidgetPreview from '@/components/WidgetPreview';
+import { generateEmbedCode, type EmbedConfig } from '@/lib/embed';
+import { isValidEmail, normalizeColor } from '@/lib/sniper-link';
 
-interface EmbedConfig {
-  sender: string;
-  buttonText: string;
-  buttonStyle: 'default' | 'minimal' | 'custom';
-  buttonColor: string;
-  showBranding: boolean;
-  containerId: string;
-}
-
-const EmbedGenerator = () => {
-  const [config, setConfig] = useState<EmbedConfig>({
-    sender: '@yourdomain.com',
-    buttonText: 'Open Inbox',
-    buttonStyle: 'default',
-    buttonColor: '#8B5CF6',
-    showBranding: true,
-    containerId: 'sniperlink-widget'
-  });
-
-  const [copied, setCopied] = useState(false);
-  const [previewEmail, setPreviewEmail] = useState('user@gmail.com');
-  const { toast } = useToast();
-
-  useEffect(() => {
-    trackEvent('embed_generator_visit');
-  }, []);
-
-  const generateEmbedCode = () => {
-    const htmlCode = `<!-- SniperLink Widget -->
-<div
-  id="${config.containerId}"
-  data-sniperlink
-  data-sender="${config.sender}"
-  data-button-text="${config.buttonText}"
-  data-button-style="${config.buttonStyle}"
-  ${config.buttonStyle === 'custom' ? `data-button-color="${config.buttonColor}"` : ''}
-  data-show-branding="${config.showBranding}"
-></div>
-
-<script src="https://cdn.sniperlinks.com/sniperlink.js"></script>
-
-<!-- Alternative: Direct initialization -->
-<script>
-  // Option 1: Auto-initialization with data attributes (above)
-
-  // Option 2: Manual initialization
-  /*
-  const widget = SniperLink.create({
-    containerId: '${config.containerId}',
-    sender: '${config.sender}',
-    buttonText: '${config.buttonText}',
-    buttonStyle: '${config.buttonStyle}',
-    ${config.buttonStyle === 'custom' ? `buttonColor: '${config.buttonColor}',` : ''}
-    showBranding: ${config.showBranding},
-    onLinkGenerate: (link, esp) => console.log('Generated:', link, esp),
-    onError: (error) => console.error('SniperLink Error:', error)
-  });
-  widget.init();
-  */
-</script>`;
-
-    return htmlCode;
+export default function EmbedGenerator() {
+  const [config, setConfig] = useState<EmbedConfig>({ sender: 'noreply@example.com', buttonText: 'Open Inbox', buttonStyle: 'default', buttonColor: '#6d28d9', buttonShape: 'rounded', showBranding: true, containerId: 'sniperlink-widget' });
+  const [email, setEmail] = useState('user@gmail.com');
+  const [mode, setMode] = useState<'prompt' | 'form' | 'fixed'>('prompt');
+  const [emailInput, setEmailInput] = useState('#email');
+  const [status, setStatus] = useState('');
+  let code = '';
+  let error = '';
+  try {
+    if (mode === 'form') document.querySelector(emailInput);
+    code = generateEmbedCode({ ...config, email: mode === 'fixed' ? email : undefined, emailInput: mode === 'form' ? emailInput : undefined }, window.location.origin);
+    if (mode === 'form' && !emailInput.trim()) error = 'Enter the selector of your signup email input.';
+  } catch (issue) {
+    error = issue instanceof Error && issue.name !== 'SyntaxError' ? issue.message : 'Enter a valid CSS selector for the email input.';
+  }
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(code); setStatus('Code copied.'); }
+    catch { setStatus('Clipboard unavailable. Select and copy the code below.'); }
   };
-
-  const copyEmbedCode = async () => {
-    try {
-      await navigator.clipboard.writeText(generateEmbedCode());
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-
-      toast({
-        title: "Code copied!",
-        description: "Embed code has been copied to your clipboard.",
-      });
-
-      trackEvent('embed_code_copy', {
-        buttonStyle: config.buttonStyle,
-        showBranding: config.showBranding,
-        sender: config.sender
-      });
-    } catch (error) {
-      toast({
-        title: "Copy failed",
-        description: "Please manually copy the code from the text area.",
-        variant: "destructive"
-      });
-    }
+  const download = () => {
+    const url = URL.createObjectURL(new Blob([`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SniperLink widget</title><body>${code}</body></html>`], { type: 'text/html' }));
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'sniperlink-embed.html';
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-
-  const downloadEmbedCode = () => {
-    const code = generateEmbedCode();
-    const blob = new Blob([code], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'sniperlink-embed.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    trackEvent('embed_code_download', {
-      buttonStyle: config.buttonStyle,
-      showBranding: config.showBranding
-    });
-  };
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-              </Link>
-            </Button>
-            <div className="p-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600">
-              <Target className="h-5 w-5 text-white" />
-            </div>
-            <span className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Embed Generator
-            </span>
-          </div>
-          <Badge className="bg-green-100 text-green-700 border-green-300">
-            <Sparkles className="mr-1 h-3 w-3" />
-            Free Forever
-          </Badge>
+  const update = <K extends keyof EmbedConfig>(key: K, value: EmbedConfig[K]) => { setConfig(current => ({ ...current, [key]: value })); setStatus(''); };
+  return <SiteLayout>
+    <div className="generator-page max-w-6xl mx-auto">
+      <h1 className="page-title font-bold mb-4">Generate your widget</h1>
+      <p className="text-muted-foreground mb-8">Preview uses the actual widget. Copied snippets load its script from this site. Replace the example sender with your own.</p>
+      <div className="generator-workspace">
+        <div className="workspace-column space-y-6">
+          <Card className="workspace-panel"><CardHeader><CardTitle>Configuration</CardTitle></CardHeader><CardContent className="space-y-4">
+            <div><label htmlFor="sender" className="block mb-2">Sender email or domain</label><Input id="sender" value={config.sender} onChange={e => update('sender', e.target.value)} /></div>
+            <div><label htmlFor="containerId" className="block mb-2">Container ID</label><Input id="containerId" value={config.containerId} onChange={e => update('containerId', e.target.value)} /></div>
+            <div><label htmlFor="email-mode" className="block mb-2">Recipient integration</label><select id="email-mode" className="w-full border rounded p-2 bg-background" value={mode} onChange={e => { setMode(e.target.value as typeof mode); setStatus(''); }}><option value="prompt">Ask for email in the widget</option><option value="form">Read my signup email input</option><option value="fixed">Use the preview email in this snippet</option></select></div>
+            {mode === 'form' && <div><label htmlFor="emailInput" className="block mb-2">Email input CSS selector</label><Input id="emailInput" value={emailInput} onChange={e => { setEmailInput(e.target.value); setStatus(''); }} /><p className="text-sm text-muted-foreground mt-2">The input must be on the same page. For embedded Typeform iframes or a redirect, pass the email with your own app integration.</p></div>}
+            {mode === 'fixed' && <p className="text-sm">This exports the preview address. In production, set data-email to the current signup address using your application.</p>}
+          </CardContent></Card>
+          <Card className="workspace-panel"><CardHeader><CardTitle>Style</CardTitle></CardHeader><CardContent className="space-y-4">
+            <div><label htmlFor="buttonText" className="block mb-2">Button text</label><Input id="buttonText" value={config.buttonText} maxLength={160} onChange={e => update('buttonText', e.target.value)} /></div>
+            <div><label htmlFor="buttonStyle" className="block mb-2">Button style</label><select id="buttonStyle" className="w-full border rounded p-2 bg-background" value={config.buttonStyle} onChange={e => update('buttonStyle', e.target.value as EmbedConfig['buttonStyle'])}><option value="default">Default</option><option value="minimal">Minimal</option><option value="custom">Custom</option></select></div>
+            <div><label htmlFor="buttonColor" className="block mb-2">Button color</label><div className="flex gap-3"><input aria-label="Choose button color" type="color" value={normalizeColor(config.buttonColor)} onChange={e => update('buttonColor', e.target.value)} /><Input id="buttonColor" value={config.buttonColor} onChange={e => update('buttonColor', e.target.value)} /></div><p className="text-sm text-muted-foreground mt-2">Use six-digit hex. Invalid colors use purple. Text adjusts for contrast.</p></div>
+            <div><label htmlFor="buttonShape" className="block mb-2">Button shape</label><select id="buttonShape" className="w-full border rounded p-2 bg-background" value={config.buttonShape} onChange={e => update('buttonShape', e.target.value as EmbedConfig['buttonShape'])}><option value="rounded">Rounded</option><option value="pill">Pill</option><option value="square">Square</option></select></div>
+            <label className="flex gap-3 items-center"><input type="checkbox" checked={config.showBranding} onChange={e => update('showBranding', e.target.checked)} />Show “Powered by SniperLink”</label>
+            <p className="text-sm text-muted-foreground">Styling and the branding toggle are free in this open-source release.</p>
+          </CardContent></Card>
         </div>
-      </nav>
-
-      <main className="container mx-auto py-12 px-4">
-        <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
-          {/* Configuration Panel */}
-          <div className="space-y-6">
-            <div className="text-center lg:text-left">
-              <h1 className="text-3xl font-bold mb-2">Generate Your Widget</h1>
-              <p className="text-muted-foreground">
-                Customize and embed SniperLink on your signup page in under 5 minutes
-              </p>
-            </div>
-
-            {/* Basic Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Basic Configuration
-                </CardTitle>
-                <CardDescription>
-                  Essential settings for your SniperLink widget
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label htmlFor="sender" className="block text-sm font-medium mb-2">
-                    Sender Domain
-                  </label>
-                  <Input
-                    id="sender"
-                    type="text"
-                    placeholder="@yourdomain.com"
-                    value={config.sender}
-                    onChange={(e) => setConfig({ ...config, sender: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    The domain your confirmation emails come from
-                  </p>
-                </div>
-
-                <div>
-                  <label htmlFor="buttonText" className="block text-sm font-medium mb-2">
-                    Button Text
-                  </label>
-                  <Input
-                    id="buttonText"
-                    type="text"
-                    placeholder="Open Inbox"
-                    value={config.buttonText}
-                    onChange={(e) => setConfig({ ...config, buttonText: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="containerId" className="block text-sm font-medium mb-2">
-                    Container ID
-                  </label>
-                  <Input
-                    id="containerId"
-                    type="text"
-                    placeholder="sniperlink-widget"
-                    value={config.containerId}
-                    onChange={(e) => setConfig({ ...config, containerId: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    HTML element ID where the widget will appear
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Style Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="h-5 w-5" />
-                  Style Options
-                </CardTitle>
-                <CardDescription>
-                  Customize the appearance of your widget
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Button Style</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {['default', 'minimal', 'custom'].map((style) => (
-                      <Button
-                        key={style}
-                        variant={config.buttonStyle === style ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setConfig({ ...config, buttonStyle: style as any })}
-                        className="capitalize"
-                      >
-                        {style}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-
-                {config.buttonStyle === 'custom' && (
-                  <div>
-                    <label htmlFor="buttonColor" className="block text-sm font-medium mb-2">
-                      Button Color
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="color"
-                        id="buttonColor"
-                        value={config.buttonColor}
-                        onChange={(e) => setConfig({ ...config, buttonColor: e.target.value })}
-                        className="w-12 h-10 rounded border border-input"
-                      />
-                      <Input
-                        type="text"
-                        placeholder="#8B5CF6"
-                        value={config.buttonColor}
-                        onChange={(e) => setConfig({ ...config, buttonColor: e.target.value })}
-                        className="flex-1"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="showBranding"
-                    checked={config.showBranding}
-                    onChange={(e) => setConfig({ ...config, showBranding: e.target.checked })}
-                    className="rounded border-gray-300"
-                  />
-                  <label htmlFor="showBranding" className="text-sm font-medium">
-                    Show "Powered by SniperLink"
-                    <Badge variant="secondary" className="ml-2 text-xs">Free Plan</Badge>
-                  </label>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Preview and Code */}
-          <div className="space-y-6">
-            {/* Live Preview */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Eye className="h-5 w-5" />
-                  Live Preview
-                </CardTitle>
-                <CardDescription>
-                  See how your widget will look
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4">
-                  <label htmlFor="previewEmail" className="block text-sm font-medium mb-2">
-                    Test Email
-                  </label>
-                  <Input
-                    id="previewEmail"
-                    type="email"
-                    placeholder="user@gmail.com"
-                    value={previewEmail}
-                    onChange={(e) => setPreviewEmail(e.target.value)}
-                  />
-                </div>
-
-                {/* Preview Widget */}
-                <div className="border rounded-lg p-6 bg-gray-50 dark:bg-gray-900/20">
-                  <div className="text-center">
-                    <button
-                      className={`
-                        inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all
-                        ${config.buttonStyle === 'default'
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl'
-                          : config.buttonStyle === 'minimal'
-                          ? 'bg-indigo-600 text-white px-4 py-2 text-sm'
-                          : `text-white`}
-                      `}
-                      style={config.buttonStyle === 'custom' ? { backgroundColor: config.buttonColor } : {}}
-                    >
-                      <span className="text-lg">📧</span>
-                      {config.buttonText}
-                    </button>
-                    <div className="mt-2 text-xs text-muted-foreground">
-                      Opens Gmail to find your confirmation email
-                    </div>
-                    {config.showBranding && (
-                      <div className="mt-3 text-xs text-muted-foreground">
-                        <a href="#" className="hover:text-purple-600">Powered by SniperLink</a>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Generated Code */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Code className="h-5 w-5" />
-                  Embed Code
-                </CardTitle>
-                <CardDescription>
-                  Copy this code and paste it on your signup page
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="relative">
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto max-h-80">
-                    <code>{generateEmbedCode()}</code>
-                  </pre>
-
-                  <div className="flex gap-2 mt-4">
-                    <Button onClick={copyEmbedCode} className="flex-1">
-                      {copied ? (
-                        <>
-                          <CheckCircle className="mr-2 h-4 w-4" />
-                          Copied!
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="mr-2 h-4 w-4" />
-                          Copy Code
-                        </>
-                      )}
-                    </Button>
-
-                    <Button variant="outline" onClick={downloadEmbedCode}>
-                      <Download className="mr-2 h-4 w-4" />
-                      Download
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Integration Instructions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Integration Steps</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ol className="space-y-3 text-sm">
-                  <li className="flex gap-3">
-                    <Badge className="min-w-[20px] h-6 flex items-center justify-center bg-purple-100 text-purple-700 border-purple-300">1</Badge>
-                    <span>Copy the embed code above</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <Badge className="min-w-[20px] h-6 flex items-center justify-center bg-purple-100 text-purple-700 border-purple-300">2</Badge>
-                    <span>Paste it on your post-signup "check your email" page</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <Badge className="min-w-[20px] h-6 flex items-center justify-center bg-purple-100 text-purple-700 border-purple-300">3</Badge>
-                    <span>Update the <code className="bg-gray-100 px-1 rounded">data-sender</code> attribute with your domain</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <Badge className="min-w-[20px] h-6 flex items-center justify-center bg-purple-100 text-purple-700 border-purple-300">4</Badge>
-                    <span>Test with a real signup to see the magic! 🎉</span>
-                  </li>
-                </ol>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="workspace-column space-y-6">
+          <Card className="workspace-panel"><CardHeader><CardTitle>Live preview</CardTitle></CardHeader><CardContent className="space-y-4">
+            <div><label htmlFor="previewEmail" className="block mb-2">Preview email</label><Input id="previewEmail" type="email" value={email} onChange={e => { setEmail(e.target.value); setStatus(''); }} /></div>
+            {!isValidEmail(email) ? <p role="alert">Enter a valid preview email.</p> : <div className="widget-specimen"><WidgetPreview email={email} config={config} /></div>}
+            <p className="text-sm text-muted-foreground">This opens real webmail. It does not send a message. Unknown providers show manual instructions.</p>
+          </CardContent></Card>
+          <Card className="workspace-panel"><CardHeader><CardTitle>Install code</CardTitle></CardHeader><CardContent className="space-y-4">
+            {error ? <p role="alert" className="text-destructive">{error}</p> : <textarea aria-label="Embed code" readOnly value={code} rows={15} className="export-code w-full border rounded p-3 font-mono text-xs bg-muted" />}
+            <div className="export-actions flex flex-wrap gap-3"><Button onClick={copy} disabled={!!error}>Copy code</Button><Button variant="outline" onClick={download} disabled={!!error}>Download HTML</Button><Button variant="outline" asChild><a href="/widget/sniperlink.js" download>Download widget JS</a></Button></div>
+            <p role="status" className="text-sm">{status}</p>
+            <p className="text-sm">Paste on your confirmation screen, after your signup succeeds. No account or service key is required. <Link to="/docs" className="underline">See HTML, builder and SPA instructions.</Link></p>
+          </CardContent></Card>
         </div>
-      </main>
+      </div>
     </div>
-  );
-};
-
-export default EmbedGenerator;
+  </SiteLayout>;
+}

@@ -1,46 +1,29 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { copyFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 export default defineConfig({
+  plugins: [{
+    name: 'widget-public-paths',
+    closeBundle() {
+      const widget = resolve('public/widget/sniperlink.js');
+      copyFileSync(widget, resolve('public/widget/sniperlink.min.js'));
+      copyFileSync(widget, resolve('public/sniperlink.js'));
+      copyFileSync(widget, resolve('public/sniperlink.min.js'));
+    }
+  }],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/widget/index.ts'),
+      entry: resolve('src/widget/index.ts'),
       name: 'SniperLink',
-      fileName: (format) => `sniperlink${format === 'es' ? '.esm' : ''}.js`,
+      fileName: format => format === 'es' ? 'sniperlink.esm.js' : 'sniperlink.js',
       formats: ['iife', 'es']
     },
-    rollupOptions: {
-      output: {
-        // Ensure the IIFE format has the global name
-        name: 'SniperLink',
-        // Minimize external dependencies
-        globals: {}
-      },
-      external: []
-    },
-    outDir: 'dist/widget',
+    outDir: 'public/widget',
+    copyPublicDir: false,
+    emptyOutDir: true,
     minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: false, // Keep console for debugging during development
-        drop_debugger: true
-      },
-      mangle: {
-        reserved: ['SniperLink']
-      }
-    },
-    sourcemap: true,
-    emptyOutDir: true
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src')
-    }
-  },
-  define: {
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
-  },
-  esbuild: {
+    sourcemap: false,
     target: 'es2020'
   }
 });

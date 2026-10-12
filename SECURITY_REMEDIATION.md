@@ -1,77 +1,11 @@
-# Security Remediation: Exposed Resend API Key
+# Security notes for the first release
 
-## Issue Summary
-GitGuardian detected an exposed Resend API key in the repository on September 18th, 2025. The API key `re_BfHZKBHU_GuQzudZaRKU5oL8fCwQK3GtU` was committed to the repository in commit `4073016`.
+The former browser-side delivery integration contained a hardcoded delivery credential, and an older remediation note repeated it. Both paths have been removed from the working tree. No delivery credential is needed by this product's core.
 
-## Actions Taken
+The parent must revoke or rotate the previously exposed credential if it is still active. Removing code does not revoke a credential or erase Git history. This implementation did not access a delivery account or change any live service.
 
-### 1. Immediate Remediation ✅
-- **Removed .env file from git tracking**: Used `git rm --cached .env` to remove the file from version control
-- **Updated .gitignore**: Added comprehensive environment variable patterns to prevent future exposure:
-  ```
-  .env
-  .env.local
-  .env.development.local
-  .env.test.local
-  .env.production.local
-  ```
-- **Committed security fix**: Created commit `7f5732e` with proper security remediation
+Widget rendering uses DOM nodes and textContent. Sender/email validation rejects markup and search-operator injection. Snippet attributes are HTML encoded. Style inputs accept six-digit hex values and documented enums only. Inbox links come from a fixed HTTPS provider map, with opener and referrer protection.
 
-### 2. Code Analysis ✅
-- **Verified proper implementation**: The code correctly uses `import.meta.env.VITE_RESEND_API_KEY` for environment variable access
-- **Confirmed no hardcoded keys**: No API keys are hardcoded in the source code
-- **Validated example file**: `env.example` properly shows placeholder values
+Tracking is disabled by default. Only explicitly consented known-provider clicks can reach a host analytics callback; payloads exclude email, sender, URLs, page/referrer and user agent. Unknown-provider interactions are never tracked. There are no browser SDKs for billing or email delivery.
 
-## Required Actions
-
-### 1. Revoke Exposed API Key ⚠️ **CRITICAL**
-**You must immediately revoke the exposed API key:**
-1. Log into your Resend dashboard
-2. Go to API Keys section
-3. Revoke/delete the key: `re_BfHZKBHU_GuQzudZaRKU5oL8fCwQK3GtU`
-4. Generate a new API key
-
-### 2. Update Environment Variables
-1. Create a new `.env` file locally (not committed to git):
-   ```bash
-   cp env.example .env
-   ```
-2. Add your new Resend API key to the `.env` file:
-   ```
-   VITE_RESEND_API_KEY=your_new_resend_api_key_here
-   ```
-
-### 3. Verify Security
-- Ensure `.env` file is not tracked by git: `git status` should not show `.env`
-- Test that the application works with the new API key
-- Consider using environment-specific keys for development vs production
-
-## Prevention Measures
-
-### 1. Pre-commit Hooks (Recommended)
-Consider adding a pre-commit hook to scan for secrets:
-```bash
-# Install git-secrets or similar tool
-npm install --save-dev @commitlint/config-conventional
-```
-
-### 2. Environment Variable Best Practices
-- Never commit `.env` files
-- Use `.env.example` for documentation
-- Use different keys for different environments
-- Regularly rotate API keys
-- Use environment-specific configuration
-
-### 3. Code Review Process
-- Always review environment variable usage in pull requests
-- Ensure no hardcoded secrets in code
-- Verify `.gitignore` includes environment files
-
-## Status
-- ✅ Exposed file removed from git tracking
-- ✅ .gitignore updated to prevent future exposure
-- ⚠️ **ACTION REQUIRED**: Revoke exposed API key in Resend dashboard
-- ⚠️ **ACTION REQUIRED**: Generate and configure new API key
-
-## Contact
-If you have questions about this remediation, please review the security documentation or contact the development team.
+Regression checks: npm test, npm run lint, npm run test:browser and npm run check:release. The release scan reports filenames only if a credential pattern is found. Do not print historical diffs of credential-bearing files or paste raw provider logs into reports.

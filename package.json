@@ -6,40 +6,41 @@
   "description": "Drop-in JavaScript widget that generates deep links to email inboxes to recover lost signups",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
+    "build": "npm run build:widget && vite build",
+    "build:dev": "npm run build:widget && vite build --mode development",
     "preview": "vite preview",
     "build:widget": "vite build --config vite.widget.config.ts",
-    "type-check": "tsc --noEmit --skipLibCheck --noUnusedLocals false --noUnusedParameters false",
-    "lint": "echo 'Linting check passed'",
-    "test": "echo 'Tests passed'"
+    "type-check": "tsc --noEmit && tsc --project tsconfig.node.json --noEmit",
+    "lint": "eslint src tests scripts *.ts *.js",
+    "test": "node scripts/test-engine.mjs",
+    "test:browser": "playwright test",
+    "check:release": "node scripts/check-release.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.1.4",
-    "@stripe/stripe-js": "^7.8.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "gtag": "^1.0.1",
     "lovable-tagger": "^1.1.9",
     "lucide-react": "^0.462.0",
-    "mixpanel-browser": "^2.68.0",
-    "posthog-js": "^1.260.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
-    "resend": "^6.0.1",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@playwright/test": "1.59.0",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/parser": "^8.71.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
+    "esbuild": "0.21.5",
+    "eslint": "^9.39.5",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "terser": "^5.44.0",
@@ -56,5 +57,8 @@
     "growth"
   ],
   "author": "SniperLinks Team",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.18"
+  }
 }
